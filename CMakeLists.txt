@@ -20,7 +20,7 @@ if(MSVC)
 endif()
 if(NOT MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
         set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
     endif()
 endif()
@@ -37,11 +37,23 @@ else()
     add_definitions(-DPTW32_STATIC_LIB)
 endif()
 
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
-aux_source_directory("${CMAKE_CURRENT_SOURCE_DIR}/src" SOURCES)
-list(REMOVE_ITEM SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/pthread.c")
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src SOURCES)
+list(REMOVE_ITEM SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/pthread.c)
 
 add_library(${PROJECT_NAME} ${PTHREAD_LIBRARY_TYPE} ${SOURCES})
 if(MSVC)
     target_link_libraries(${PROJECT_NAME} ws2_32)
 endif()
+
+file(GLOB HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
+install(
+    FILES ${HEADERS} DESTINATION include/${PROJECT_NAME}
+)
+
+install(
+    TARGETS ${PROJECT_NAME}
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+)
