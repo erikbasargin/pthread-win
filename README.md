@@ -23,4 +23,8 @@ include_directories(${externals_install_dir}/include)
 set(PTHREAD_LIB "${externals_install_dir}/lib/libpthread.lib")
 add_executable(${PROJECT_NAME} main.cpp)
 add_dependencies(${PROJECT_NAME} lpthread)
+target_link_libraries(
+    ${PROJECT_NAME}
+    ${PTHREAD_LIB}
+)
 ```
